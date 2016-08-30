@@ -2,6 +2,7 @@ package storm.blueprints.chapter1.v3;
 
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
+import org.apache.storm.StormSubmitter;
 import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.tuple.Fields;
 import storm.blueprints.utils.Utils;
@@ -26,10 +27,16 @@ public class WordCountTopology {
 		builder.setBolt(REPORT_BOLT_ID, reportBolt).globalGrouping(COUNT_BOLT_ID);
 		
 		Config config = new Config();
-		LocalCluster cluster = new LocalCluster();
-		cluster.submitTopology(TOPOLOGY_NAME, config, builder.createTopology());
-		Utils.waitForSeconds(10);
-		cluster.killTopology(TOPOLOGY_NAME);
-		cluster.shutdown();
+		if(args.length == 0)
+		{
+			LocalCluster cluster = new LocalCluster();
+			cluster.submitTopology(TOPOLOGY_NAME, config, builder.createTopology());
+			Utils.waitForSeconds(10);
+			cluster.killTopology(TOPOLOGY_NAME);
+			cluster.shutdown();
+		}
+		else{
+			StormSubmitter.submitTopology(args[0], config, builder.createTopology());
+		}
 	}
 }

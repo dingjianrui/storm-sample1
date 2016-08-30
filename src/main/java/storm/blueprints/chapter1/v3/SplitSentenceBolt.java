@@ -28,6 +28,7 @@ public class SplitSentenceBolt extends BaseRichBolt {
 		{
 			this.collector.emit(new Values(word));
 		}
+		this.collector.ack(arg0);
 	}
 	
 	@Override
